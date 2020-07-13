@@ -1,0 +1,19 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: othala
+      POSTGRES_USER: othala
+      POSTGRES_DB: othala
+    ports:
+    - 5430:5432
+  othala:
+    build: .
+    depends_on:
+      - db
+    ports:
+    - 8000:$PORT
+    env_file:
+      - .env
+    entrypoint: CompileDaemon -log-prefix=false -build="go build -o othala -v app/main.go" -command="./othala"

@@ -1,6 +1,6 @@
 package main
 
-import "othala/deliveries"
+import "othala/app/deliveries"
 
 func main() {
 	deliveries.Run()

@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"othala/config"
+	"othala/app/config"
 )
 
 func Run() {
