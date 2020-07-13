@@ -1,2 +1,4 @@
-# Othala-invoice
-MS to managing invoices
+# Othala - Product System
+System to handle Goods acquisition
+
+
