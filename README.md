@@ -22,7 +22,7 @@ Setup the environment variables that you will need, these variables are shown in
 Set up your database:
 
 ```sh
-docker run --name pets -p 5432:5432 -e POSTGRES_PASSWORD=othala -e POSTGRES_USER=othala -e POSTGRES_DB=othala -d postgres
+docker run --name othala -p 5432:5432 -e POSTGRES_PASSWORD=othala -e POSTGRES_USER=othala -e POSTGRES_DB=othala -d postgres
 ```
   
   
