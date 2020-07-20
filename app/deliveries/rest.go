@@ -6,14 +6,18 @@ import (
 	"net/http"
 	"os"
 	"othala/app/config"
+	"othala/app/products/adapters"
 )
 
 func Run() {
 	err := config.Injector.Invoke(
-		func() error {
+		func(productAdapter *adapters.RestAdapter) error {
 			router := chi.NewRouter()
 			port := os.Getenv("PORT")
 			registerCommonRoutes(router)
+			router.Route("/v1", func(apiRouter chi.Router) {
+				adapters.RegisterProductRoutes(apiRouter, productAdapter)
+			})
 			log.Println("server running on port: " + port)
 			return http.ListenAndServe(":"+port, router)
 		})
