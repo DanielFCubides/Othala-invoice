@@ -4,6 +4,8 @@ import (
 	"othala/app/deliveries"
 	_ "othala/app/products"
 	_ "othala/app/products/adapters"
+	_ "othala/app/products/usecases"
+	_ "othala/app/products/usecases/implementations"
 )
 
 func main() {
