@@ -63,6 +63,9 @@ go test ./...
 
 ## TODOs
 
+1. Add unit test in adapter layer for all endpoints.
+1. Implement repositories.
+1. Add unit test in logic and repositories layer.
 1. Add some tool for logs and monitoring.
 1. Add swagger documentation.
 1. Kubernetes file deployment.

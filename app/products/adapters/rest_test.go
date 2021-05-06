@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"encoding/json"
 	"github.com/stretchr/testify/suite"
 	"net/http"
 	"net/http/httptest"
@@ -25,8 +26,9 @@ func (r *RestSuite) SetupSuite() {
 }
 
 func (r RestSuite) TestRest_GetProducts() {
+	productName := "Milk"
 	r.useCase.Mock.On("GetAll").Return([]products.Product{{
-		Name:     "Milk",
+		Name:     productName,
 		Category: "lactose",
 		Type:     "freezer",
 	}}, nil)
@@ -43,5 +45,13 @@ func (r RestSuite) TestRest_GetProducts() {
 	if status := recoder.Code; status != http.StatusOK {
 		r.Fail("error not ok")
 	}
+
+	var response []*ProductResponse
+	err = json.NewDecoder(recoder.Body).Decode(&response)
+	if err != nil {
+		r.Fail("could not parse response")
+		return
+	}
+	r.Equal(productName, response[0].Name)
 
 }
