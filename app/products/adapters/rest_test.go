@@ -36,14 +36,14 @@ func (r RestSuite) TestRest_GetProducts() {
 		Type:     "freezer",
 	}}, nil)
 
-	recoder, err := r.callAdapter(http.MethodGet, "/products/", nil, r.adapter.GetProducts)
-	if recoder == nil {
+	recorder, err := r.callAdapter(http.MethodGet, "/products/", nil, r.adapter.GetProducts)
+	if recorder == nil {
 		r.Fail("could not call adapter")
 		return
 	}
-	r.Equal(http.StatusOK, recoder.Code)
+	r.Equal(http.StatusOK, recorder.Code)
 	var response []*ProductResponse
-	err = json.NewDecoder(recoder.Body).Decode(&response)
+	err = json.NewDecoder(recorder.Body).Decode(&response)
 	if err != nil {
 		r.Fail("could not parse response")
 		return
@@ -60,14 +60,14 @@ func (r RestSuite) TestRest_GetProductByID() {
 			Type:     "freezer",
 		}, nil)
 
-	recoder, err := r.callAdapter(http.MethodGet, "/products/1/", nil, r.adapter.GetProductById)
-	if recoder == nil {
+	recorder, err := r.callAdapter(http.MethodGet, "/products/1/", nil, r.adapter.GetProductById)
+	if recorder == nil {
 		r.Fail("could not call adapter")
 		return
 	}
-	r.Equal(http.StatusOK, recoder.Code)
+	r.Equal(http.StatusOK, recorder.Code)
 	var response *ProductResponse
-	err = json.NewDecoder(recoder.Body).Decode(&response)
+	err = json.NewDecoder(recorder.Body).Decode(&response)
 	if err != nil {
 		r.Fail("could not parse response")
 		return
@@ -86,14 +86,14 @@ func (r RestSuite) TestRest_CreateProduct() {
 		Return(product, nil)
 	b, err := json.Marshal(product)
 	reader := bytes.NewBuffer(b)
-	recoder, err := r.callAdapter(http.MethodPost, "/products/", reader, r.adapter.CreateProduct)
-	if recoder == nil {
+	recorder, err := r.callAdapter(http.MethodPost, "/products/", reader, r.adapter.CreateProduct)
+	if recorder == nil {
 		r.Fail("could not call adapter")
 		return
 	}
-	r.Equal(http.StatusOK, recoder.Code)
+	r.Equal(http.StatusOK, recorder.Code)
 	var response *ProductResponse
-	err = json.NewDecoder(recoder.Body).Decode(&response)
+	err = json.NewDecoder(recorder.Body).Decode(&response)
 	if err != nil {
 		r.Fail("could not parse response")
 		return
@@ -112,14 +112,14 @@ func (r RestSuite) TestRest_UpdateProduct() {
 		Return(product, nil)
 	b, err := json.Marshal(product)
 	reader := bytes.NewBuffer(b)
-	recoder, err := r.callAdapter(http.MethodPost, "/products/1/", reader, r.adapter.UpdateProduct)
-	if recoder == nil {
+	recorder, err := r.callAdapter(http.MethodPost, "/products/1/", reader, r.adapter.UpdateProduct)
+	if recorder == nil {
 		r.Fail("could not call adapter")
 		return
 	}
-	r.Equal(http.StatusOK, recoder.Code)
+	r.Equal(http.StatusOK, recorder.Code)
 	var response *ProductResponse
-	err = json.NewDecoder(recoder.Body).Decode(&response)
+	err = json.NewDecoder(recorder.Body).Decode(&response)
 	if err != nil {
 		r.Fail("could not parse response")
 		return
@@ -132,8 +132,8 @@ func (r RestSuite) callAdapter(method, url string, body io.Reader, adapter http.
 	if err != nil {
 		return nil, err
 	}
-	recoder := httptest.NewRecorder()
+	recorder := httptest.NewRecorder()
 	handler := adapter
-	handler.ServeHTTP(recoder, res)
-	return recoder, err
+	handler.ServeHTTP(recorder, res)
+	return recorder, err
 }
