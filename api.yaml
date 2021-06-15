@@ -1,0 +1,69 @@
+openapi: 3.0.3
+info:
+  title: Othala
+  description: Othala, System to handle Goods acquisition
+  version: 1.0.0
+servers:
+  - url: 'https'
+tags:
+  - name: products
+    description: 'This collection of endpoints will handle all CRUD operations on products'
+paths:
+  /products/:
+    post:
+      summary: create a new prodocut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRequest'
+
+      responses:
+        201:
+          $ref: '#/components/schemas/ProductResponse'
+      tags:
+        - products
+    get:
+      tags:
+        - products
+      summary: get all products
+      responses:
+        200:
+          description: items listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductResponse'
+#  /products/{product_id}/:
+#    get:
+#    put:
+#    delete:
+
+components:
+  schemas:
+    ProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'alqueria'
+        category:
+          type: string
+          example: 'milk'
+        type:
+          type: string
+          example: 'lactose'
+    ProductResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'alqueria'
+        category:
+          type: string
+          example: 'milk'
+        type:
+          type: string
+          example: 'lactose'
