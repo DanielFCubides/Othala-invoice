@@ -4,12 +4,12 @@ info:
   description: Othala, System to handle Goods acquisition
   version: 1.0.0
 servers:
-  - url: 'https'
+  - url: http://localhost:8000
 tags:
   - name: products
     description: 'This collection of endpoints will handle all CRUD operations on products'
 paths:
-  /products/:
+  /v1/products/:
     post:
       summary: create a new prodocut
       requestBody:
@@ -36,8 +36,25 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductResponse'
-#  /products/{product_id}/:
-#    get:
+  /v1/products/{product_id}/:
+    get:
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: The product ID
+      responses:
+        200:
+          description: details on a product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+      tags:
+        - products
 #    put:
 #    delete:
 
