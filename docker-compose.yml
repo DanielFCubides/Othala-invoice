@@ -7,13 +7,13 @@ services:
       POSTGRES_USER: othala
       POSTGRES_DB: othala
     ports:
-    - 5430:5432
+    - "5430:5432"
   othala:
     build: .
     depends_on:
       - db
     ports:
-    - 8000:$PORT
+    - "8000:8000"
     env_file:
       - .env
     entrypoint: CompileDaemon -log-prefix=false -build="go build -o othala -v app/main.go" -command="./othala"
