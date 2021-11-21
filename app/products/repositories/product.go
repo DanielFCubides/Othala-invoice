@@ -3,7 +3,7 @@ package repositories
 import "othala/app/products"
 
 type Product struct {
-	Name     string
+	Name     string `gorm:"primaryKey"`
 	Category string
 	Type     string
 }

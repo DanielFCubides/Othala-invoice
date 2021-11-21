@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
+	_ "gorm.io/driver/postgres"
 	"log"
 	"os"
 )
@@ -10,7 +11,7 @@ import (
 func init() {
 	err := Injector.Provide(NewPostgressConnection)
 	if err != nil {
-		log.Println("Error providing Postgress connection:", err)
+		log.Println("Error providing Postgres connection:", err)
 	}
 }
 

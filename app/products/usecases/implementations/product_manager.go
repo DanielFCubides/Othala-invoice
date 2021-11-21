@@ -3,10 +3,14 @@ package implementations
 import (
 	"othala/app/config"
 	"othala/app/products"
+	"othala/app/products/repositories"
 	"othala/app/products/usecases"
 )
 
-type ProductManagerImpl struct{}
+type ProductManagerImpl struct {
+	reader repositories.ProductReader
+	writer repositories.ProductWriter
+}
 
 func init() {
 	if err := config.Injector.Provide(newProductManagerImpl); err != nil {
@@ -14,8 +18,11 @@ func init() {
 	}
 }
 
-func newProductManagerImpl() usecases.ProductManager {
-	return &ProductManagerImpl{}
+func newProductManagerImpl(reader repositories.ProductReader, writer repositories.ProductWriter) usecases.ProductManager {
+	return &ProductManagerImpl{
+		reader: reader,
+		writer: writer,
+	}
 }
 
 func (manager *ProductManagerImpl) GetAll() ([]products.Product, error) {
@@ -26,34 +33,34 @@ func (manager *ProductManagerImpl) GetAll() ([]products.Product, error) {
 	}}, nil
 }
 
-func (manager *ProductManagerImpl) GetById(productId string) (products.Product, error) {
-	return products.Product{
-		Name:     "club colombia dorada",
+func (manager *ProductManagerImpl) GetById(productId string) (*products.Product, error) {
+	return &products.Product{
+		Name:     productId,
 		Category: "alcohol",
 		Type:     "beer",
 	}, nil
 }
 
-func (manager *ProductManagerImpl) Delete(productId string) (products.Product, error) {
-	return products.Product{
-		Name:     "club colombia roja",
-		Category: "alcohol",
-		Type:     "beer",
-	}, nil
+func (manager *ProductManagerImpl) Delete(productName string) (*products.Product, error) {
+	product, err := manager.writer.Delete(productName)
+	if err != nil {
+		return nil, err
+	}
+	return product, err
 }
 
-func (manager *ProductManagerImpl) Create(product products.Product) (products.Product, error) {
-	return products.Product{
-		Name:     "delirium nocturnum",
-		Category: "alcohol",
-		Type:     "beer",
-	}, nil
+func (manager *ProductManagerImpl) Create(p products.Product) (*products.Product, error) {
+	product, err := manager.writer.Create(p)
+	if err != nil {
+		return nil, err
+	}
+	return product, err
 }
 
-func (manager *ProductManagerImpl) Update(product products.Product) (products.Product, error) {
-	return products.Product{
-		Name:     "delirium tremens",
-		Category: "alcohol",
-		Type:     "beer",
-	}, nil
+func (manager *ProductManagerImpl) Update(p products.Product) (*products.Product, error) {
+	product, err := manager.writer.Update(p)
+	if err != nil {
+		return nil, err
+	}
+	return product, err
 }
