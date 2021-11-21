@@ -3,10 +3,14 @@ package implementations
 import (
 	"othala/app/config"
 	"othala/app/products"
+	"othala/app/products/repositories"
 	"othala/app/products/usecases"
 )
 
-type ProductManagerImpl struct{}
+type ProductManagerImpl struct {
+	reader repositories.ProductReader
+	writer repositories.ProductWriter
+}
 
 func init() {
 	if err := config.Injector.Provide(newProductManagerImpl); err != nil {
@@ -14,8 +18,11 @@ func init() {
 	}
 }
 
-func newProductManagerImpl() usecases.ProductManager {
-	return &ProductManagerImpl{}
+func newProductManagerImpl(reader repositories.ProductReader, writer repositories.ProductWriter) usecases.ProductManager {
+	return &ProductManagerImpl{
+		reader: reader,
+		writer: writer,
+	}
 }
 
 func (manager *ProductManagerImpl) GetAll() ([]products.Product, error) {
@@ -28,7 +35,7 @@ func (manager *ProductManagerImpl) GetAll() ([]products.Product, error) {
 
 func (manager *ProductManagerImpl) GetById(productId string) (products.Product, error) {
 	return products.Product{
-		Name:     "club colombia dorada",
+		Name:     productId,
 		Category: "alcohol",
 		Type:     "beer",
 	}, nil

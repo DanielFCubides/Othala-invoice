@@ -29,5 +29,7 @@ func (p ProductReader) FindById(id string) (*products.Product, error) {
 }
 
 func (p ProductReader) FindAll(searchParams []string) ([]*products.Product, error) {
+	p.db.Find(repositories.Product{})
 	panic("implement me")
+
 }
