@@ -3,13 +3,14 @@ package config
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
+	_ "github.com/lib/pq"
 	_ "gorm.io/driver/postgres"
 	"log"
 	"os"
 )
 
 func init() {
-	err := Injector.Provide(NewPostgressConnection)
+	err := Injector.Provide(NewPostgresConnection)
 	if err != nil {
 		log.Println("Error providing Postgres connection:", err)
 	}
@@ -17,26 +18,28 @@ func init() {
 
 // getURL retrieves the URL to connection to SQL database.
 func getURL(params ...string) string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True", params[0], params[1], params[2], params[3], params[4])
+	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", params[0], params[1], params[2], params[3], params[4])
 }
 
-type PostgressConnection struct {
+type PostgresConnection struct {
 	db *gorm.DB
 }
 
-// NewPostgressConnection retrieves a sql connection to MySQL server
-func NewPostgressConnection() (Connection, error) {
+// NewPostgresConnection retrieves a sql connection to MySQL server
+func NewPostgresConnection() (Connection, error) {
 	dbUsername := os.Getenv("DB_USER_NAME")
 	dbPassword := os.Getenv("DB_USER_PASSWORD")
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 
-	url := getURL(dbUsername,
-		dbPassword,
+	url := getURL(
 		dbHost,
+		dbUsername,
+		dbPassword,
+		dbName,
 		dbPort,
-		dbName)
+	)
 	log.Println(url)
 
 	db, err := gorm.Open("postgres", url)
@@ -46,9 +49,9 @@ func NewPostgressConnection() (Connection, error) {
 		return nil, err
 	}
 
-	return &PostgressConnection{db: db}, nil
+	return &PostgresConnection{db: db}, nil
 }
 
-func (c *PostgressConnection) GetDatabase() *gorm.DB {
+func (c *PostgresConnection) GetDatabase() *gorm.DB {
 	return c.db
 }
