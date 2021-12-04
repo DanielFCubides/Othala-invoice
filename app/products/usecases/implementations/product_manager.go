@@ -25,12 +25,12 @@ func newProductManagerImpl(reader repositories.ProductReader, writer repositorie
 	}
 }
 
-func (manager *ProductManagerImpl) GetAll() ([]products.Product, error) {
-	return []products.Product{{
-		Name:     "club colombia roja",
-		Category: "alcohol",
-		Type:     "beer",
-	}}, nil
+func (manager *ProductManagerImpl) GetAll() ([]*products.Product, error) {
+	all, err := manager.reader.FindAll([]string{})
+	if err != nil {
+		return nil, err
+	}
+	return all, nil
 }
 
 func (manager *ProductManagerImpl) GetById(productId string) (*products.Product, error) {

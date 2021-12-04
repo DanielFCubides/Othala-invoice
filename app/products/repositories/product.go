@@ -8,6 +8,10 @@ type Product struct {
 	Type     string
 }
 
+func Migrate(){
+
+}
+
 func (p Product) ToDomain() products.Product {
 	return products.Product{
 		Name:     p.Name,
