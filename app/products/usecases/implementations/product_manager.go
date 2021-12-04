@@ -34,11 +34,11 @@ func (manager *ProductManagerImpl) GetAll() ([]*products.Product, error) {
 }
 
 func (manager *ProductManagerImpl) GetById(productId string) (*products.Product, error) {
-	return &products.Product{
-		Name:     productId,
-		Category: "alcohol",
-		Type:     "beer",
-	}, nil
+	product, err := manager.reader.FindById(productId)
+	if err != nil {
+		return nil, err
+	}
+	return product, nil
 }
 
 func (manager *ProductManagerImpl) Delete(productName string) (*products.Product, error) {
