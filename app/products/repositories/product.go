@@ -23,3 +23,4 @@ func (p Product) FromDomain(product products.Product) Product {
 		Type:     product.Type,
 	}
 }
+

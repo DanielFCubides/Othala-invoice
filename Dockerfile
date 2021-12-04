@@ -8,6 +8,5 @@ ENV PROJECT_ROOT=$APP
 WORKDIR $APP
 COPY . $APP
 
-RUN pwd
-RUN ls
 RUN go get github.com/githubnemo/CompileDaemon
+entrypoint CompileDaemon -log-prefix=false -build="go build -o othala -v app/main.go" -command="./othala"

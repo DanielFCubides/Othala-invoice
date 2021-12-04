@@ -7,6 +7,7 @@ import (
 	_ "gorm.io/driver/postgres"
 	"log"
 	"os"
+	"othala/app/products/repositories"
 )
 
 func init() {
@@ -45,11 +46,17 @@ func NewPostgresConnection() (Connection, error) {
 	db, err := gorm.Open("postgres", url)
 	db.LogMode(true)
 
+	migrateModels(db)
+
 	if err != nil {
 		return nil, err
 	}
 
 	return &PostgresConnection{db: db}, nil
+}
+
+func migrateModels(db *gorm.DB) {
+	db.AutoMigrate(&repositories.Product{})
 }
 
 func (c *PostgresConnection) GetDatabase() *gorm.DB {
