@@ -2,7 +2,7 @@ package implementations
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"othala/app/config"
 	"othala/app/products"
 	"othala/app/products/repositories"

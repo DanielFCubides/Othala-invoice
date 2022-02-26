@@ -2,7 +2,9 @@ package config
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"log"
 	"os"
 )
@@ -16,7 +18,8 @@ func init() {
 
 // getURL retrieves the URL to connection to SQL database.
 func getURL(params ...string) string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True", params[0], params[1], params[2], params[3], params[4])
+
+	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/Bogota", params[0], params[1], params[2], params[3], params[4])
 }
 
 type PostgressConnection struct {
@@ -31,15 +34,18 @@ func NewPostgressConnection() (Connection, error) {
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 
-	url := getURL(dbUsername,
-		dbPassword,
+	url := getURL(
 		dbHost,
+		dbUsername,
+		dbPassword,
+		dbName,
 		dbPort,
-		dbName)
+	)
 	log.Println(url)
 
-	db, err := gorm.Open("postgres", url)
-	db.LogMode(true)
+	db, err := gorm.Open(postgres.Open(url), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Error),
+	})
 
 	if err != nil {
 		return nil, err
