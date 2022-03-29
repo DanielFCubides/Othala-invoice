@@ -8,6 +8,8 @@ import (
 	_ "othala/app/products/repositories/implementations"
 	_ "othala/app/products/usecases"
 	_ "othala/app/products/usecases/implementations"
+	_ "othala/app/products_lists/usecases"
+	_ "othala/app/products_lists/usecases/implementations"
 )
 
 func main() {
