@@ -6,12 +6,12 @@ import (
 )
 
 type ProductLists struct {
-	ID int
+	ID    int
 	Items []Item
 }
 
 type Item struct {
-	Product repositories.Product
-	Value float64
+	Product   repositories.Product
+	Value     float64
 	AddedDate time.Time
 }

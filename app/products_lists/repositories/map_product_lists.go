@@ -23,14 +23,14 @@ func newProductListsRepo() ProductListsRepository {
 }
 
 func (m MapProductListsRepository) Read(ID int) (*products_lists.ProductLists, error) {
-	if value, exist := m.Data[ID]; exist{
+	if value, exist := m.Data[ID]; exist {
 		return &value, nil
 	}
 	return nil, errors.New("element not found")
 }
 
 func (m MapProductListsRepository) Write(list *products_lists.ProductLists) (*products_lists.ProductLists, error) {
-	if _, exist := m.Data[list.ID]; exist{
+	if _, exist := m.Data[list.ID]; exist {
 		return nil, errors.New("element already exist")
 	}
 	index := len(m.Data)

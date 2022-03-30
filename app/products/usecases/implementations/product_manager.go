@@ -26,6 +26,7 @@ func newProductManagerImpl(reader repositories.ProductReader, writer repositorie
 }
 
 func (manager *ProductManagerImpl) GetAll() ([]products.Product, error) {
+
 	return []products.Product{{
 		Name:     "club colombia roja",
 		Category: "alcohol",
