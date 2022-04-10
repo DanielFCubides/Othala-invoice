@@ -8,13 +8,29 @@ import (
 	"os"
 	"othala/app/config"
 	"othala/app/products/adapters"
+	"othala/app/products/repositories"
+	_ "othala/app/products/repositories/implementations"
+	_ "othala/app/products/usecases/implementations"
 )
 
 func Run() {
-	err := config.Injector.Invoke(AddCorsHeaders)
+	err := config.Injector.Invoke(NewServer)
 	if err != nil {
 		log.Println("error invoking startup code", err)
 	}
+}
+
+func NewServer(productAdapter *adapters.RestAdapter, conn config.Connection) error {
+	MigrateModels()
+	err := AddCorsHeaders(productAdapter)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func MigrateModels() {
+	repositories.Migrate()
 }
 
 func AddCorsHeaders(productAdapter *adapters.RestAdapter) error {

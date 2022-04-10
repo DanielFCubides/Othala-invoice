@@ -1,9 +1,12 @@
 package repositories
 
-import "othala/app/products"
+import (
+	"othala/app/config"
+	"othala/app/products"
+)
 
 type Product struct {
-	Name     string
+	Name     string `gorm:"primaryKey"`
 	Category string
 	Type     string
 }
@@ -22,4 +25,23 @@ func (p Product) FromDomain(product products.Product) Product {
 		Category: product.Category,
 		Type:     product.Type,
 	}
+}
+
+func Migrate()  {
+	var conn config.Connection
+	invokeFunc := func(connection config.Connection) {
+		conn = connection
+	}
+	err := config.Injector.Invoke(invokeFunc)
+	if err != nil {
+		panic(err)
+	}
+
+	db := conn.GetDatabase()
+
+	err = db.AutoMigrate(Product{})
+	if err != nil {
+		panic(err)
+	}
+
 }
