@@ -7,7 +7,7 @@ ENV PROJECT_ROOT=$APP
 
 WORKDIR $APP
 COPY . $APP
-
+RUN go test ./...
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o othala app/main.go
 
 FROM alpine:latest
