@@ -3,6 +3,7 @@ package adapters
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/go-chi/chi"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 	"io"
@@ -36,7 +37,7 @@ func (r RestSuite) TestRest_GetProducts() {
 		Type:     "freezer",
 	}}, nil)
 
-	recorder, err := r.callAdapter(http.MethodGet, "/products/", nil, r.adapter.GetProducts)
+	recorder, err := r.callAdapter(http.MethodGet, "/v1/products/", nil, r.adapter.GetProducts)
 	if recorder == nil {
 		r.Fail("could not call adapter")
 		return
@@ -60,7 +61,7 @@ func (r RestSuite) TestRest_GetProductByID() {
 			Type:     "freezer",
 		}, nil)
 
-	recorder, err := r.callAdapter(http.MethodGet, "/products/1/", nil, r.adapter.GetProductById)
+	recorder, err := r.callAdapter(http.MethodGet, "/v1/products/1/", nil, r.adapter.GetProductById)
 	if recorder == nil {
 		r.Fail("could not call adapter")
 		return
@@ -86,7 +87,7 @@ func (r RestSuite) TestRest_CreateProduct() {
 		Return(&product, nil)
 	b, err := json.Marshal(product)
 	reader := bytes.NewBuffer(b)
-	recorder, err := r.callAdapter(http.MethodPost, "/products/", reader, r.adapter.CreateProduct)
+	recorder, err := r.callAdapter(http.MethodPost, "/v1/products/", reader, r.adapter.CreateProduct)
 	if recorder == nil {
 		r.Fail("could not call adapter")
 		return
@@ -112,7 +113,7 @@ func (r RestSuite) TestRest_UpdateProduct() {
 		Return(&product, nil)
 	b, err := json.Marshal(product)
 	reader := bytes.NewBuffer(b)
-	recorder, err := r.callAdapter(http.MethodPost, "/products/1/", reader, r.adapter.UpdateProduct)
+	recorder, err := r.callAdapter(http.MethodPut, "/v1/products/1/", reader, r.adapter.UpdateProduct)
 	if recorder == nil {
 		r.Fail("could not call adapter")
 		return
@@ -132,8 +133,12 @@ func (r RestSuite) callAdapter(method, url string, body io.Reader, adapter http.
 	if err != nil {
 		return nil, err
 	}
+	router := chi.NewRouter()
+	router.Route("/v1", func(apiRouter chi.Router) {
+		RegisterProductRoutes(apiRouter, r.adapter)
+	})
 	recorder := httptest.NewRecorder()
-	handler := adapter
+	handler := router
 	handler.ServeHTTP(recorder, res)
 	return recorder, err
 }

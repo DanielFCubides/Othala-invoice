@@ -33,7 +33,7 @@ func (s *ProductManagerSuite) TestProductManager_GetById_Success() {
 		Category: "chocolate",
 		Type:     "candy",
 	}
-	s.reader.On("FindById", mock.Anything).Return(arguments, nil)
+	s.reader.On("FindById", mock.Anything).Return(arguments, nil).Once()
 	product, err := s.manager.GetById("milk")
 	if err != nil {
 		s.Fail(err.Error())
@@ -45,7 +45,7 @@ func (s *ProductManagerSuite) TestProductManager_GetById_Success() {
 }
 
 func (s *ProductManagerSuite) TestProductManager_GetById_Failed() {
-	s.reader.On("FindById", mock.Anything).Return(nil, errors.New("some error"))
+	s.reader.On("FindById", mock.Anything).Return(nil, errors.New("some error")).Once()
 	_, err := s.manager.GetById("milk")
 	if err != nil {
 		s.Error(err)
