@@ -15,4 +15,4 @@ ENV APP=/go/src/othala
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 COPY --from=builder $APP/othala ./
-CMD ["./app"]
+CMD ["./othala"]
