@@ -12,9 +12,9 @@ import (
 
 type ProductManagerSuite struct {
 	suite.Suite
-	reader *mocks.ProductReader
-	writer *mocks.ProductWriter
-	manager    usecases.ProductManager
+	reader  *mocks.ProductReader
+	writer  *mocks.ProductWriter
+	manager usecases.ProductManager
 }
 
 func TestRestInit(t *testing.T) {
