@@ -26,7 +26,7 @@ type PostgressConnection struct {
 	db *gorm.DB
 }
 
-// NewPostgressConnection retrieves a sql connection to MySQL server
+// NewPostgressConnection retrieves a sql connection to postgres server
 func NewPostgressConnection() (Connection, error) {
 	dbUsername := os.Getenv("DB_USER_NAME")
 	dbPassword := os.Getenv("DB_USER_PASSWORD")

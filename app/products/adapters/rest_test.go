@@ -30,7 +30,7 @@ func (r *RestSuite) SetupSuite() {
 
 func (r RestSuite) TestRest_GetProducts() {
 	productName := "Milk"
-	r.useCase.Mock.On("GetAll").Return([]products.Product{{
+	r.useCase.Mock.On("GetAll").Return([]*products.Product{{
 		Name:     productName,
 		Category: "lactose",
 		Type:     "freezer",
@@ -54,7 +54,7 @@ func (r RestSuite) TestRest_GetProducts() {
 func (r RestSuite) TestRest_GetProductByID() {
 	productName := "Milk"
 	r.useCase.Mock.On("GetById", mock.Anything).
-		Return(products.Product{
+		Return(&products.Product{
 			Name:     productName,
 			Category: "lactose",
 			Type:     "freezer",
@@ -83,7 +83,7 @@ func (r RestSuite) TestRest_CreateProduct() {
 		Type:     "freezer",
 	}
 	r.useCase.Mock.On("Create", mock.Anything).
-		Return(product, nil)
+		Return(&product, nil)
 	b, err := json.Marshal(product)
 	reader := bytes.NewBuffer(b)
 	recorder, err := r.callAdapter(http.MethodPost, "/products/", reader, r.adapter.CreateProduct)
@@ -109,7 +109,7 @@ func (r RestSuite) TestRest_UpdateProduct() {
 		Type:     "freezer",
 	}
 	r.useCase.Mock.On("Update", mock.Anything).
-		Return(product, nil)
+		Return(&product, nil)
 	b, err := json.Marshal(product)
 	reader := bytes.NewBuffer(b)
 	recorder, err := r.callAdapter(http.MethodPost, "/products/1/", reader, r.adapter.UpdateProduct)

@@ -2,9 +2,10 @@ package adapters
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/go-chi/chi"
 	"net/http"
 	"othala/app/config"
-	"othala/app/products"
 	"othala/app/products/usecases"
 )
 
@@ -51,22 +52,43 @@ func (adapter *RestAdapter) UpdateProduct(writer http.ResponseWriter, request *h
 }
 
 func (adapter *RestAdapter) GetProductById(writer http.ResponseWriter, request *http.Request) {
-	response, _ := adapter.manager.GetById("product")
+	productID := chi.URLParam(request,"productId")
+	if len(productID) == 0 {
+		writer.WriteHeader(http.StatusBadRequest)
+		_ = json.NewEncoder(writer).Encode(fmt.Sprint("{'error':'no product id at the request'}"))
+		return
+	}
+	response, err := adapter.manager.GetById(productID)
+	if err != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(writer).Encode(response)
 }
 
 func (adapter *RestAdapter) CreateProduct(writer http.ResponseWriter, request *http.Request) {
-	product := products.Product{}
-	response, _ := adapter.manager.Create(product)
+	var productRequest ProductRequest
+	err := json.NewDecoder(request.Body).Decode(&productRequest)
+	if err != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	response, _ := adapter.manager.Create(productRequest.mapToProduct())
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(writer).Encode(response)
 }
 
 func (adapter *RestAdapter) DeleteProduct(writer http.ResponseWriter, request *http.Request) {
-	response, _ := adapter.manager.Delete("product")
+	productID := chi.URLParam(request,"productId")
+	if len(productID) == 0 {
+		writer.WriteHeader(http.StatusBadRequest)
+		_ = json.NewEncoder(writer).Encode(fmt.Sprint("{'error':'no product id at the request'}"))
+		return
+	}
+	response, _ := adapter.manager.Delete(productID)
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(writer).Encode(response)

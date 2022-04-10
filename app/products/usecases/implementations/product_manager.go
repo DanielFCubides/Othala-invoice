@@ -25,43 +25,42 @@ func newProductManagerImpl(reader repositories.ProductReader, writer repositorie
 	}
 }
 
-func (manager *ProductManagerImpl) GetAll() ([]products.Product, error) {
-
-	return []products.Product{{
-		Name:     "club colombia roja",
-		Category: "alcohol",
-		Type:     "beer",
-	}}, nil
+func (manager *ProductManagerImpl) GetAll() ([]*products.Product, error) {
+	all, err := manager.reader.FindAll([]string{})
+	if err != nil {
+		return nil, err
+	}
+	return all, nil
 }
 
-func (manager *ProductManagerImpl) GetById(productId string) (products.Product, error) {
+func (manager *ProductManagerImpl) GetById(productId string) (*products.Product, error) {
 	product, err := manager.reader.FindById(productId)
 	if err != nil {
-		return products.Product{}, err
+		return nil, err
 	}
-	return *product, nil
+	return product, nil
 }
 
-func (manager *ProductManagerImpl) Delete(productId string) (products.Product, error) {
-	return products.Product{
-		Name:     "club colombia roja",
-		Category: "alcohol",
-		Type:     "beer",
-	}, nil
+func (manager *ProductManagerImpl) Delete(productName string) (*products.Product, error) {
+	product, err := manager.writer.Delete(productName)
+	if err != nil {
+		return nil, err
+	}
+	return product, err
 }
 
-func (manager *ProductManagerImpl) Create(product products.Product) (products.Product, error) {
-	return products.Product{
-		Name:     "delirium nocturnum",
-		Category: "alcohol",
-		Type:     "beer",
-	}, nil
+func (manager *ProductManagerImpl) Create(p products.Product) (*products.Product, error) {
+	product, err := manager.writer.Create(p)
+	if err != nil {
+		return nil, err
+	}
+	return product, err
 }
 
-func (manager *ProductManagerImpl) Update(product products.Product) (products.Product, error) {
-	return products.Product{
-		Name:     "delirium tremens",
-		Category: "alcohol",
-		Type:     "beer",
-	}, nil
+func (manager *ProductManagerImpl) Update(p products.Product) (*products.Product, error) {
+	product, err := manager.writer.Update(p)
+	if err != nil {
+		return nil, err
+	}
+	return product, err
 }

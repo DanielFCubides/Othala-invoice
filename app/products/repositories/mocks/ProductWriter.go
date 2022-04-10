@@ -59,13 +59,13 @@ func (_m *ProductWriter) CreateBatch(_a0 []products.Product) (*products.Product,
 	return r0, r1
 }
 
-// Delete provides a mock function with given fields: product
-func (_m *ProductWriter) Delete(product products.Product) (*products.Product, error) {
-	ret := _m.Called(product)
+// Delete provides a mock function with given fields: productName
+func (_m *ProductWriter) Delete(productName string) (*products.Product, error) {
+	ret := _m.Called(productName)
 
 	var r0 *products.Product
-	if rf, ok := ret.Get(0).(func(products.Product) *products.Product); ok {
-		r0 = rf(product)
+	if rf, ok := ret.Get(0).(func(string) *products.Product); ok {
+		r0 = rf(productName)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*products.Product)
@@ -73,8 +73,8 @@ func (_m *ProductWriter) Delete(product products.Product) (*products.Product, er
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(products.Product) error); ok {
-		r1 = rf(product)
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(productName)
 	} else {
 		r1 = ret.Error(1)
 	}

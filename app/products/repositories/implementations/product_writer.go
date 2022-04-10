@@ -24,18 +24,45 @@ func init() {
 	}
 }
 
-func (p ProductWriter) Create(product products.Product) (*products.Product, error) {
+func (w ProductWriter) Create(p products.Product) (*products.Product, error) {
+	product := repositories.Product{}.FromDomain(p)
+	result := w.db.Create(product)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	domain := product.ToDomain()
+	return &domain, nil
+}
+
+func (w ProductWriter) CreateBatch(products []products.Product) (*products.Product, error) {
 	panic("implement me")
 }
 
-func (p ProductWriter) CreateBatch(products []products.Product) (*products.Product, error) {
-	panic("implement me")
+func (w ProductWriter) Update(p products.Product) (*products.Product, error) {
+	product := repositories.Product{}.FromDomain(p)
+	created := w.db.First(repositories.Product{}, p.Name)
+	if created.Error != nil {
+		return nil, created.Error
+	}
+	result := w.db.Save(product)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	domain := product.ToDomain()
+	return &domain, nil
 }
 
-func (p ProductWriter) Update(product products.Product) (*products.Product, error) {
-	panic("implement me")
-}
+func (w ProductWriter) Delete(productName string) (*products.Product, error) {
 
-func (p ProductWriter) Delete(product products.Product) (*products.Product, error) {
-	panic("implement me")
+	product := repositories.Product{}
+	result := w.db.First(product, productName)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	result = w.db.Create(product)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	domain := product.ToDomain()
+	return &domain, nil
 }
